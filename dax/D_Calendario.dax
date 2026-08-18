@@ -1,0 +1,33 @@
+-- D_Calendario.dax
+-- Dimensão de datas para o modelo Financial Sample.
+-- Ajuste as datas inicial e final ao intervalo real da coluna Date.
+
+D_Calendário =
+ADDCOLUMNS(
+    CALENDAR(
+        DATE(2018, 1, 1),
+        DATE(2020, 12, 31)
+    ),
+    "Ano", YEAR([Date]),
+    "Mês", MONTH([Date]),
+    "Nome_Mês", FORMAT([Date], "MMMM"),
+    "Trimestre", "T" & FORMAT([Date], "Q"),
+    "Semestre", "S" & IF(MONTH([Date]) <= 6, 1, 2)
+)
+
+-- Medidas opcionais para a etapa de análise:
+
+Total Vendas =
+SUMX(
+    F_Vendas,
+    F_Vendas[Units Sold] * F_Vendas[Sales Price]
+)
+
+Total Unidades =
+SUM(F_Vendas[Units Sold])
+
+Total Lucro =
+SUM(F_Vendas[Profit])
+
+Preço Médio =
+AVERAGE(F_Vendas[Sales Price])
